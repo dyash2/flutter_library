@@ -1,3 +1,39 @@
+// export default function StatsBar({ questions }) {
+//   const total      = questions.length;
+//   const favs       = questions.filter(q => q.is_favourite).length;
+//   const easy       = questions.filter(q => q.difficulty === 'Easy').length;
+//   const med        = questions.filter(q => q.difficulty === 'Medium').length;
+//   const hard       = questions.filter(q => q.difficulty === 'Hard').length;
+//   const categories = [...new Set(questions.map(q => q.category))].length;
+
+//   return (
+//     <div className="flex items-center gap-1.5 flex-wrap mb-5">
+//       <span className="text-xs text-[#8B9BB4] font-body mr-1">Stats:</span>
+
+//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-[#54C5F8]">
+//         {total} total
+//       </span>
+//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-yellow-400">
+//         ★ {favs}
+//       </span>
+//       <span className="text-[11px] text-[#3A4F6B]">·</span>
+//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-green-400">
+//         {easy}E
+//       </span>
+//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-yellow-300">
+//         {med}M
+//       </span>
+//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-red-400">
+//         {hard}H
+//       </span>
+//       <span className="text-[11px] text-[#3A4F6B]">·</span>
+//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-purple-400">
+//         {categories} categories
+//       </span>
+//     </div>
+//   );
+// }
+
 import { BarChart3, Star, CheckCircle2, Settings, AlertTriangle, Folder } from 'lucide-react';
 
 export default function StatsBar({ questions }) {

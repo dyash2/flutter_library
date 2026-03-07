@@ -8,7 +8,7 @@ const diffBadge = (d) => {
   return 'badge-medium';
 };
 
-export default function QuestionCard({ q, onEdit, onDelete, onToggleFav }) {
+export default function QuestionCard({ q, onEdit, onDelete, onToggleFav, isOfflineOnly }) {
   const [expanded, setExpanded] = useState(false);
   const [delConfirm, setDelConfirm] = useState(false);
 
@@ -32,6 +32,11 @@ export default function QuestionCard({ q, onEdit, onDelete, onToggleFav }) {
               <span className={`text-[10px] font-display border px-2 py-0.5 rounded-full tracking-wider uppercase ${diffBadge(q.difficulty)}`}>
                 {q.difficulty}
               </span>
+              {isOfflineOnly && (
+                <span className="text-[10px] font-display text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-full tracking-wider uppercase">
+                  📴 offline
+                </span>
+              )}
             </div>
 
             {/* Question text */}
