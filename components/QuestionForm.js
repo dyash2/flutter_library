@@ -1,19 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDomain } from '../context/DomainContext';
 
 const DIFFICULTIES = ['Easy', 'Medium', 'Hard'];
 
 // ── Category Combo Box ────────────────────────────────────────
-// Shows existing categories as a dropdown, but also lets you
-// type a brand-new one freely — fully self-managing.
 function CategoryCombo({ value, onChange, categories }) {
-  const [open, setOpen]       = useState(false);
-  const [input, setInput]     = useState(value || '');
-  const wrapperRef            = useRef(null);
+  const [open, setOpen]   = useState(false);
+  const [input, setInput] = useState(value || '');
+  const wrapperRef        = useRef(null);
 
-  // Sync input when parent changes value (e.g. edit mode)
   useEffect(() => { setInput(value || ''); }, [value]);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setOpen(false);
@@ -26,17 +23,9 @@ function CategoryCombo({ value, onChange, categories }) {
     c.toLowerCase().includes(input.toLowerCase()) && c !== input
   );
 
-  const select = (cat) => {
-    setInput(cat);
-    onChange(cat);
-    setOpen(false);
-  };
+  const select = (cat) => { setInput(cat); onChange(cat); setOpen(false); };
 
-  const handleInput = (e) => {
-    setInput(e.target.value);
-    onChange(e.target.value);
-    setOpen(true);
-  };
+  const handleInput = (e) => { setInput(e.target.value); onChange(e.target.value); setOpen(true); };
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -46,52 +35,63 @@ function CategoryCombo({ value, onChange, categories }) {
           value={input}
           onChange={handleInput}
           onFocus={() => setOpen(true)}
-          placeholder="e.g. State Management"
-          className="w-full bg-[#0E1621] border border-[#1E2D42] rounded-xl px-4 py-3 pr-9 text-[#E8EEF7] placeholder-[#3A4F6B] font-body text-sm transition-all"
+          placeholder="e.g. Network Security"
+          className="w-full rounded-xl px-4 py-3 pr-9 text-sm font-body transition-all"
+          style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
         />
-        {/* Chevron */}
         <button
           type="button"
           onClick={() => setOpen(o => !o)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#3A4F6B] hover:text-[#8B9BB4] transition-colors"
+          className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+          style={{ color: 'var(--muted)' }}
         >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+            strokeLinecap="round" strokeLinejoin="round"
             style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </button>
       </div>
 
-      {/* Dropdown */}
       {open && (
         <div
-          className="absolute z-50 top-full left-0 right-0 mt-1 rounded-xl border border-[#1E2D42] bg-[#151F2E] overflow-hidden animate-fade-in"
-          style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.5)', maxHeight: '220px', overflowY: 'auto' }}
+          className="absolute z-50 top-full left-0 right-0 mt-1 rounded-xl border overflow-hidden animate-fade-in"
+          style={{
+            background: 'var(--card)',
+            borderColor: 'var(--border)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            maxHeight: '220px',
+            overflowY: 'auto',
+          }}
         >
-          {/* "Create new" option when input doesn't match any existing */}
           {input.trim() && !categories.includes(input.trim()) && (
             <button
               type="button"
               onClick={() => select(input.trim())}
-              className="w-full text-left px-4 py-2.5 text-xs font-body text-[#54C5F8] hover:bg-[#027DFD]/10 transition-colors flex items-center gap-2"
+              className="w-full text-left px-4 py-2.5 text-xs font-body transition-colors flex items-center gap-2"
+              style={{ color: 'var(--accent-light)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-subtle)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
             >
-              <span className="text-[#027DFD]">+</span>
+              <span style={{ color: 'var(--accent)' }}>+</span>
               Create &quot;{input.trim()}&quot;
             </button>
           )}
 
-          {/* Existing categories */}
           {filtered.length > 0 && (
             <>
               {input.trim() && !categories.includes(input.trim()) && (
-                <div className="h-px bg-[#1E2D42] mx-3" />
+                <div className="h-px mx-3" style={{ background: 'var(--border)' }} />
               )}
               {filtered.map(cat => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => select(cat)}
-                  className="w-full text-left px-4 py-2.5 text-xs font-body text-[#E8EEF7] hover:bg-[#1E2D42] transition-colors"
+                  className="w-full text-left px-4 py-2.5 text-xs font-body transition-colors"
+                  style={{ color: 'var(--text)' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--border)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                 >
                   {cat}
                 </button>
@@ -99,28 +99,28 @@ function CategoryCombo({ value, onChange, categories }) {
             </>
           )}
 
-          {/* No match and no input */}
           {!input.trim() && categories.length === 0 && (
-            <p className="px-4 py-3 text-xs text-[#8B9BB4] font-body">
+            <p className="px-4 py-3 text-xs font-body" style={{ color: 'var(--muted)' }}>
               No categories yet — type to create one
             </p>
           )}
 
-          {/* All categories when input is empty */}
           {!input.trim() && categories.length > 0 && (
             categories.map(cat => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => select(cat)}
-                className={`w-full text-left px-4 py-2.5 text-xs font-body transition-colors ${
-                  cat === value
-                    ? 'text-[#54C5F8] bg-[#027DFD]/10'
-                    : 'text-[#E8EEF7] hover:bg-[#1E2D42]'
-                }`}
+                className="w-full text-left px-4 py-2.5 text-xs font-body transition-colors"
+                style={cat === value
+                  ? { color: 'var(--accent-light)', background: 'var(--accent-subtle)' }
+                  : { color: 'var(--text)' }
+                }
+                onMouseEnter={e => { if (cat !== value) e.currentTarget.style.background = 'var(--border)'; }}
+                onMouseLeave={e => { if (cat !== value) e.currentTarget.style.background = 'transparent'; }}
               >
                 {cat}
-                {cat === value && <span className="float-right text-[#027DFD]">✓</span>}
+                {cat === value && <span className="float-right" style={{ color: 'var(--accent)' }}>✓</span>}
               </button>
             ))
           )}
@@ -132,7 +132,9 @@ function CategoryCombo({ value, onChange, categories }) {
 
 // ── Question Form Modal ───────────────────────────────────────
 export default function QuestionForm({ onSubmit, onClose, initial, categories = [] }) {
+  const { domain } = useDomain();
   const isEdit = !!initial;
+
   const [form, setForm] = useState({
     question:   '',
     answer:     '',
@@ -164,25 +166,34 @@ export default function QuestionForm({ onSubmit, onClose, initial, categories = 
     setLoading(false);
   };
 
+  const accentBg = { background: 'linear-gradient(135deg, var(--accent), var(--accent-light))' };
+
   return (
     <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="bg-[#151F2E] border border-[#1E2D42] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-slide-up"
-        style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.6)' }}
+        className="rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-slide-up"
+        style={{
+          background: 'var(--card)',
+          border: '1px solid var(--border)',
+          boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
+        }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#1E2D42]">
+        <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'var(--border)' }}>
           <div>
             <h2 className="font-display text-lg text-white">
-              {isEdit ? '✏️ Edit Question' : '+ New Question'}
+              {isEdit ? '✏️ Edit Question' : `+ New ${domain.label} Question`}
             </h2>
-            <p className="text-xs text-[#8B9BB4] mt-0.5 font-body">
-              {isEdit ? 'Update your interview Q&A' : 'Add to your Flutter knowledge base'}
+            <p className="text-xs mt-0.5 font-body" style={{ color: 'var(--muted)' }}>
+              {isEdit ? `Update your ${domain.label} Q&A` : domain.formSubtitle}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-[#8B9BB4] hover:text-white hover:bg-[#1E2D42] transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors hover:text-white"
+            style={{ color: 'var(--muted)' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'var(--border)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >✕</button>
         </div>
 
@@ -190,38 +201,40 @@ export default function QuestionForm({ onSubmit, onClose, initial, categories = 
         <div className="p-6 space-y-5">
           {/* Question */}
           <div>
-            <label className="block text-xs font-display text-[#54C5F8] mb-2 tracking-wider uppercase">
+            <label className="block text-xs font-display mb-2 tracking-wider uppercase" style={{ color: 'var(--accent-light)' }}>
               Question *
             </label>
             <textarea
               value={form.question}
               onChange={e => set('question', e.target.value)}
-              placeholder="e.g. What is the difference between StatelessWidget and StatefulWidget?"
+              placeholder={domain.placeholder.question}
               rows={3}
-              className="w-full bg-[#0E1621] border border-[#1E2D42] rounded-xl px-4 py-3 text-[#E8EEF7] placeholder-[#3A4F6B] font-body text-sm resize-none transition-all"
+              className="w-full rounded-xl px-4 py-3 text-sm font-body resize-none transition-all"
+              style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
             />
           </div>
 
           {/* Answer */}
           <div>
-            <label className="block text-xs font-display text-[#54C5F8] mb-2 tracking-wider uppercase">
-              Answer * <span className="normal-case text-[#8B9BB4] font-body tracking-normal">(Markdown supported)</span>
+            <label className="block text-xs font-display mb-2 tracking-wider uppercase" style={{ color: 'var(--accent-light)' }}>
+              Answer * <span className="normal-case font-body tracking-normal" style={{ color: 'var(--muted)' }}>(Markdown supported)</span>
             </label>
             <textarea
               value={form.answer}
               onChange={e => set('answer', e.target.value)}
-              placeholder="Write your answer here. You can use **bold**, `code`, and ```code blocks```"
+              placeholder={domain.placeholder.answer}
               rows={7}
-              className="w-full bg-[#0E1621] border border-[#1E2D42] rounded-xl px-4 py-3 text-[#E8EEF7] placeholder-[#3A4F6B] font-code text-sm resize-none transition-all"
+              className="w-full rounded-xl px-4 py-3 text-sm font-code resize-none transition-all"
+              style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
             />
           </div>
 
           {/* Category + Difficulty */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-display text-[#54C5F8] mb-2 tracking-wider uppercase">
+              <label className="block text-xs font-display mb-2 tracking-wider uppercase" style={{ color: 'var(--accent-light)' }}>
                 Category
-                <span className="normal-case text-[#3A4F6B] font-body tracking-normal ml-1">(pick or create)</span>
+                <span className="normal-case font-body tracking-normal ml-1" style={{ color: 'var(--border)' }}>(pick or create)</span>
               </label>
               <CategoryCombo
                 value={form.category}
@@ -231,7 +244,7 @@ export default function QuestionForm({ onSubmit, onClose, initial, categories = 
             </div>
 
             <div>
-              <label className="block text-xs font-display text-[#54C5F8] mb-2 tracking-wider uppercase">
+              <label className="block text-xs font-display mb-2 tracking-wider uppercase" style={{ color: 'var(--accent-light)' }}>
                 Difficulty
               </label>
               <div className="flex gap-2">
@@ -243,8 +256,9 @@ export default function QuestionForm({ onSubmit, onClose, initial, categories = 
                     className={`flex-1 py-3 rounded-xl border text-xs font-display transition-all ${
                       form.difficulty === d
                         ? d === 'Easy' ? 'badge-easy border' : d === 'Medium' ? 'badge-medium border' : 'badge-hard border'
-                        : 'border-[#1E2D42] text-[#8B9BB4] hover:border-[#2A3F5C]'
+                        : 'hover:border-[#2A3F5C]'
                     }`}
+                    style={form.difficulty !== d ? { borderColor: 'var(--border)', color: 'var(--muted)' } : {}}
                   >
                     {d}
                   </button>
@@ -255,15 +269,16 @@ export default function QuestionForm({ onSubmit, onClose, initial, categories = 
 
           {/* Tags */}
           <div>
-            <label className="block text-xs font-display text-[#54C5F8] mb-2 tracking-wider uppercase">
-              Tags <span className="normal-case text-[#8B9BB4] font-body tracking-normal">(comma-separated)</span>
+            <label className="block text-xs font-display mb-2 tracking-wider uppercase" style={{ color: 'var(--accent-light)' }}>
+              Tags <span className="normal-case font-body tracking-normal" style={{ color: 'var(--muted)' }}>(comma-separated)</span>
             </label>
             <input
               type="text"
               value={form.tags}
               onChange={e => set('tags', e.target.value)}
-              placeholder="e.g. state, widgets, lifecycle"
-              className="w-full bg-[#0E1621] border border-[#1E2D42] rounded-xl px-4 py-3 text-[#E8EEF7] placeholder-[#3A4F6B] font-body text-sm transition-all"
+              placeholder={domain.placeholder.tags}
+              className="w-full rounded-xl px-4 py-3 text-sm font-body transition-all"
+              style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
             />
           </div>
         </div>
@@ -272,16 +287,20 @@ export default function QuestionForm({ onSubmit, onClose, initial, categories = 
         <div className="flex gap-3 p-6 pt-0">
           <button
             onClick={onClose}
-            className="flex-1 py-3 rounded-xl border border-[#1E2D42] text-[#8B9BB4] hover:text-white hover:border-[#2A3F5C] font-display text-sm transition-all"
+            className="flex-1 py-3 rounded-xl border font-display text-sm transition-all hover:text-white"
+            style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--muted)'}
+            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={loading || !form.question.trim() || !form.answer.trim() || !form.category.trim()}
-            className="flex-1 py-3 rounded-xl bg-[#027DFD] hover:bg-[#0068D8] disabled:opacity-40 disabled:cursor-not-allowed text-white font-display text-sm transition-all glow-blue"
+            className="flex-1 py-3 rounded-xl text-white font-display text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed glow-accent"
+            style={accentBg}
           >
-            {loading ? '...' : isEdit ? 'Save Changes' : 'Add Question'}
+            {loading ? '...' : isEdit ? 'Save Changes' : `Add ${domain.label} Question`}
           </button>
         </div>
       </div>

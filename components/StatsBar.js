@@ -1,84 +1,52 @@
-// export default function StatsBar({ questions }) {
-//   const total      = questions.length;
-//   const favs       = questions.filter(q => q.is_favourite).length;
-//   const easy       = questions.filter(q => q.difficulty === 'Easy').length;
-//   const med        = questions.filter(q => q.difficulty === 'Medium').length;
-//   const hard       = questions.filter(q => q.difficulty === 'Hard').length;
-//   const categories = [...new Set(questions.map(q => q.category))].length;
-
-//   return (
-//     <div className="flex items-center gap-1.5 flex-wrap mb-5">
-//       <span className="text-xs text-[#8B9BB4] font-body mr-1">Stats:</span>
-
-//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-[#54C5F8]">
-//         {total} total
-//       </span>
-//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-yellow-400">
-//         ★ {favs}
-//       </span>
-//       <span className="text-[11px] text-[#3A4F6B]">·</span>
-//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-green-400">
-//         {easy}E
-//       </span>
-//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-yellow-300">
-//         {med}M
-//       </span>
-//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-red-400">
-//         {hard}H
-//       </span>
-//       <span className="text-[11px] text-[#3A4F6B]">·</span>
-//       <span className="text-xs font-code px-2.5 py-1 rounded-full bg-[#151F2E] border border-[#1E2D42] text-purple-400">
-//         {categories} categories
-//       </span>
-//     </div>
-//   );
-// }
-
 import { BarChart3, Star, CheckCircle2, Settings, AlertTriangle, Folder } from 'lucide-react';
 
 export default function StatsBar({ questions }) {
-  // Defensive check in case questions is undefined initially
   if (!questions) return null;
 
-  const total = questions.length;
-  const favs = questions.filter(q => q.is_favourite).length;
-  const easy = questions.filter(q => q.difficulty === 'Easy').length;
-  const med  = questions.filter(q => q.difficulty === 'Medium').length;
-  const hard = questions.filter(q => q.difficulty === 'Hard').length;
+  const total      = questions.length;
+  const favs       = questions.filter(q => q.is_favourite).length;
+  const easy       = questions.filter(q => q.difficulty === 'Easy').length;
+  const med        = questions.filter(q => q.difficulty === 'Medium').length;
+  const hard       = questions.filter(q => q.difficulty === 'Hard').length;
   const categories = [...new Set(questions.map(q => q.category))].length;
 
   const stats = [
-    { label: 'Total Questions', value: total,      color: '#54C5F8', icon: BarChart3 },
-    { label: 'Favourites',      value: favs,       color: '#FACC15', icon: Star },
-    { label: 'Easy',            value: easy,       color: '#4ADE80', icon: CheckCircle2 },
-    { label: 'Medium',          value: med,        color: '#F59E0B', icon: Settings }, // Darker amber so it doesn't clash with Favourites
-    { label: 'Hard',            value: hard,       color: '#F87171', icon: AlertTriangle },
-    { label: 'Categories',      value: categories, color: '#A78BFA', icon: Folder },
+    // "Total" and "Categories" use the active accent colour so they shift
+    // automatically when the domain changes — no extra logic needed.
+    { label: 'Total',       value: total,      color: 'var(--accent-light)', icon: BarChart3 },
+    { label: 'Favourites',  value: favs,       color: '#FACC15',             icon: Star },
+    { label: 'Easy',        value: easy,       color: '#4ADE80',             icon: CheckCircle2 },
+    { label: 'Medium',      value: med,        color: '#F59E0B',             icon: Settings },
+    { label: 'Hard',        value: hard,       color: '#F87171',             icon: AlertTriangle },
+    { label: 'Categories',  value: categories, color: 'var(--accent)',       icon: Folder },
   ];
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
       {stats.map(s => {
         const Icon = s.icon;
-        
         return (
           <div
             key={s.label}
-            className="group relative flex flex-col items-center justify-center p-5 bg-gradient-to-b from-[#1C2738] to-[#121A25] border border-[#27364B] rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:border-[#384A66] hover:-translate-y-1"
+            className="group relative flex flex-col items-center justify-center p-5 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            style={{
+              background: 'linear-gradient(to bottom, var(--card), var(--bg))',
+              border: '1px solid var(--border)',
+            }}
           >
-            {/* Icon container with dynamic soft background tint */}
-            <div 
+            <div
               className="p-3 rounded-xl mb-3 transition-colors duration-300"
-              style={{ backgroundColor: `${s.color}15`, color: s.color }}
+              style={{ backgroundColor: `${s.color}18`, color: s.color }}
             >
               <Icon size={24} strokeWidth={2.5} />
             </div>
-            
+
             <p className="font-display text-2xl font-bold tracking-tight" style={{ color: s.color }}>
               {s.value}
             </p>
-            
-            <p className="text-[10px] text-[#8B9BB4] font-medium mt-1 uppercase tracking-[0.15em] text-center w-full truncate">
+
+            <p className="text-[10px] font-medium mt-1 uppercase tracking-[0.15em] text-center w-full truncate"
+              style={{ color: 'var(--muted)' }}>
               {s.label}
             </p>
           </div>

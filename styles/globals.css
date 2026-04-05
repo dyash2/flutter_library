@@ -4,22 +4,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Flutter Theme (default) ────────────────────────────── */
 :root {
-  --bg: #0E1621;
-  --card: #151F2E;
-  --border: #1E2D42;
-  --flutter-blue: #027DFD;
-  --flutter-sky: #54C5F8;
-  --muted: #8B9BB4;
+  --bg:            #0E1621;
+  --card:          #151F2E;
+  --border:        #1E2D42;
+  --accent:        #027DFD;
+  --accent-light:  #54C5F8;
+  --accent-glow:   rgba(2, 125, 253, 0.2);
+  --accent-glow2:  rgba(2, 125, 253, 0.35);
+  --accent-subtle: rgba(2, 125, 253, 0.12);
+  --accent-badge:  rgba(2, 125, 253, 0.2);
+  --accent-badge-border: rgba(2, 125, 253, 0.5);
+  --muted:         #8B9BB4;
+  --text:          #E8EEF7;
+  --nav-logo-from: #027DFD;
+  --nav-logo-to:   #54C5F8;
+}
+
+/* ── CyberSecurity Theme ────────────────────────────────── */
+/* Palette: deep charcoal bg · warm slate cards · amber/orange accent */
+/* Inspired by professional security tooling (Burp Suite, SOC dashboards) */
+html.theme-cyber {
+  --bg:            #111214;
+  --card:          #18191D;
+  --border:        #2A2B31;
+  --accent:        #E8873A;
+  --accent-light:  #F5A623;
+  --accent-glow:   rgba(232, 135, 58, 0.18);
+  --accent-glow2:  rgba(232, 135, 58, 0.32);
+  --accent-subtle: rgba(232, 135, 58, 0.10);
+  --accent-badge:  rgba(232, 135, 58, 0.14);
+  --accent-badge-border: rgba(232, 135, 58, 0.35);
+  --muted:         #7A7D8A;
+  --text:          #E2E3E8;
+  --nav-logo-from: #E8873A;
+  --nav-logo-to:   #F5A623;
 }
 
 * { box-sizing: border-box; }
 
 html {
   background: var(--bg);
-  color: #E8EEF7;
+  color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif;
   scroll-behavior: smooth;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* Scrollbar */
@@ -28,13 +58,15 @@ html {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #2A3F5C; }
 
-/* Markdown answer styling */
+/* ── Markdown answer styling ───────────────────────────── */
 .answer-body h1, .answer-body h2, .answer-body h3 {
-  color: var(--flutter-sky);
+  color: var(--accent-light);
   font-family: 'Space Mono', monospace;
   margin: 1rem 0 0.5rem;
 }
 .answer-body p { margin: 0.5rem 0; line-height: 1.7; color: #C5D1E8; }
+html.theme-cyber .answer-body p { color: #b8bcc8; }
+
 .answer-body code {
   background: #0A1628;
   border: 1px solid var(--border);
@@ -42,7 +74,11 @@ html {
   border-radius: 4px;
   font-family: 'Fira Code', monospace;
   font-size: 0.85em;
-  color: var(--flutter-sky);
+  color: var(--accent-light);
+}
+html.theme-cyber .answer-body code {
+  background: #0E0F11;
+  color: var(--accent-light);
 }
 .answer-body pre {
   background: #0A1628;
@@ -52,16 +88,41 @@ html {
   overflow-x: auto;
   margin: 0.75rem 0;
 }
+
+/* ---HERE */
+.answer-body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.answer-body th,
+.answer-body td {
+  border: 1px solid var(--border);
+  padding: 8px;
+}
+
+.answer-body th {
+  background: var(--accent-subtle);
+}
+/* ---HERE */
+
+html.theme-cyber .answer-body pre { background: #0E0F11; }
 .answer-body pre code { background: none; border: none; padding: 0; }
 .answer-body ul, .answer-body ol { padding-left: 1.5rem; color: #C5D1E8; }
+html.theme-cyber .answer-body ul,
+html.theme-cyber .answer-body ol { color: #b8bcc8; }
 .answer-body li { margin: 0.3rem 0; }
-.answer-body strong { color: #E8EEF7; font-weight: 600; }
+.answer-body strong { color: var(--text); font-weight: 600; }
 
-/* Glow effects */
-.glow-blue { box-shadow: 0 0 20px rgba(2, 125, 253, 0.2); }
-.glow-blue:hover { box-shadow: 0 0 30px rgba(2, 125, 253, 0.35); }
+/* ── Glow effects ──────────────────────────────────────── */
+.glow-accent { box-shadow: 0 0 20px var(--accent-glow); }
+.glow-accent:hover { box-shadow: 0 0 30px var(--accent-glow2); }
 
-/* Card hover */
+/* Legacy alias */
+.glow-blue { box-shadow: 0 0 20px var(--accent-glow); }
+.glow-blue:hover { box-shadow: 0 0 30px var(--accent-glow2); }
+
+/* ── Card hover ────────────────────────────────────────── */
 .q-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
@@ -70,35 +131,39 @@ html {
   border-color: #2A3F5C !important;
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
-
-/* Tag pill */
-.tag-pill {
-  transition: background 0.15s, color 0.15s;
+html.theme-cyber .q-card:hover {
+  border-color: #3A3B42 !important;
 }
+
+/* ── Tag pill ───────────────────────────────────────────── */
+.tag-pill { transition: background 0.15s, color 0.15s; }
 .tag-pill:hover {
-  background: rgba(2, 125, 253, 0.2);
-  color: var(--flutter-sky);
+  background: var(--accent-subtle);
+  color: var(--accent-light);
 }
 
-/* Input focus glow */
+/* ── Input focus glow ──────────────────────────────────── */
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--flutter-blue) !important;
-  box-shadow: 0 0 0 3px rgba(2, 125, 253, 0.12);
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
-/* Difficulty badges */
-.badge-easy   { background: rgba(34,197,94,0.15); color: #4ade80; border-color: rgba(34,197,94,0.3); }
+/* ── Difficulty badges ─────────────────────────────────── */
+.badge-easy   { background: rgba(34,197,94,0.15);  color: #4ade80; border-color: rgba(34,197,94,0.3); }
 .badge-medium { background: rgba(234,179,8,0.15);  color: #facc15; border-color: rgba(234,179,8,0.3); }
 .badge-hard   { background: rgba(239,68,68,0.15);  color: #f87171; border-color: rgba(239,68,68,0.3); }
 
-/* Modal backdrop */
+/* ── Modal backdrop ────────────────────────────────────── */
 .modal-backdrop {
   backdrop-filter: blur(6px);
   background: rgba(9, 14, 22, 0.8);
 }
+html.theme-cyber .modal-backdrop {
+  background: rgba(4, 9, 4, 0.85);
+}
 
-/* Animate stagger */
+/* ── Stagger animation ─────────────────────────────────── */
 .stagger > * { animation: slideUp 0.35s ease both; }
 .stagger > *:nth-child(1) { animation-delay: 0.05s; }
 .stagger > *:nth-child(2) { animation-delay: 0.10s; }
@@ -112,4 +177,74 @@ input:focus, textarea:focus, select:focus {
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-in { animation: fadeIn 0.2s ease both; }
+.animate-slide-up { animation: slideUp 0.3s ease both; }
+
+/* ── CyberSecurity subtle card texture ─────────────────── */
+/* A very faint warm noise — no Matrix green */
+html.theme-cyber .q-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(232, 135, 58, 0.012) 3px,
+    rgba(232, 135, 58, 0.012) 4px
+  );
+  border-radius: inherit;
+  z-index: 0;
+}
+html.theme-cyber .q-card { position: relative; }
+html.theme-cyber .q-card > * { position: relative; z-index: 1; }
+
+/* ── Domain toggle button ──────────────────────────────── */
+.domain-toggle {
+  display: flex;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  transition: all 0.3s ease;
+}
+.domain-toggle-pill {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+}
+.domain-toggle-pill.active-flutter {
+  background: linear-gradient(135deg, #027DFD, #54C5F8);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(2, 125, 253, 0.45);
+}
+.domain-toggle-pill.active-cyber {
+  background: linear-gradient(135deg, #E8873A, #F5A623);
+  color: #111214;
+  box-shadow: 0 0 14px rgba(232, 135, 58, 0.40);
+}
+.domain-toggle-pill.inactive {
+  color: var(--muted);
+}
+.domain-toggle-pill.inactive:hover {
+  color: var(--text);
+  background: var(--accent-subtle);
 }
