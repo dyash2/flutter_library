@@ -22,7 +22,7 @@ export const DOMAINS = {
     accent:      '#027DFD',
     accentLight: '#54C5F8',
     themeClass:  '',                     // default theme — no extra class
-    appName:     'Flutter Interview Library',
+    appName:     'Flutter',
     shortName:   'FlutterLib',
     description: 'Personal Flutter Q&A — works offline',
     addLabel:    'Add Flutter Question',
@@ -48,7 +48,7 @@ export const DOMAINS = {
     accent:      '#E8873A',
     accentLight: '#F5A623',
     themeClass:  'theme-cyber',
-    appName:     'CyberSecurity Interview Library',
+    appName:     'CyberSecurity',
     shortName:   'CyberLib',
     description: 'Personal CyberSecurity Q&A — works offline',
     addLabel:    'Add Cyber Question',

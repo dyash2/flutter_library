@@ -293,71 +293,121 @@ export default function Home() {
 
         {/* ── Navbar ─────────────────────────────────────────── */}
         <nav
-          className="sticky top-0 z-40 backdrop-blur-md border-b"
-          style={{ background: 'color-mix(in srgb, var(--bg) 90%, transparent)', borderColor: 'var(--border)' }}
+  className="sticky top-0 z-40 backdrop-blur-md border-b"
+  style={{
+    background: "color-mix(in srgb, var(--bg) 92%, transparent)",
+    borderColor: "var(--border)",
+  }}
+>
+  <div className="w-full max-w-5xl mx-auto px-3 sm:px-4 py-3 flex items-center justify-between gap-2">
+
+    {/* 🔹 LEFT */}
+    <div className="flex items-center gap-2 min-w-0">
+      <div
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
+        style={accentBg}
+      >
+        {domain.icon}
+      </div>
+
+      <div className="min-w-0">
+        <h1 className="font-display text-sm sm:text-base text-white truncate">
+          {domain.appName}
+        </h1>
+
+        {/* status hidden on small screens */}
+        <p
+          className="hidden sm:flex text-[10px] mt-0.5 items-center gap-1.5"
+          style={{ color: "var(--muted)" }}
         >
-          <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${
+              isOnline ? "bg-green-400" : "bg-amber-400"
+            }`}
+          />
+          <span className={isOnline ? "text-green-400" : "text-amber-400"}>
+            {isOnline ? "Online" : "Offline"}
+          </span>
+          {pendingCount > 0 && (
+            <span className="text-blue-400">· {pendingCount}</span>
+          )}
+        </p>
+      </div>
+    </div>
 
-            {/* Left — logo + status */}
-            <div className="flex items-center gap-3">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 transition-all duration-500"
-                style={accentBg}
-              >
-                {domain.icon}
-              </div>
-              <div>
-                <h1 className="font-display text-sm text-white leading-none transition-all duration-300">
-                  {domain.appName}
-                </h1>
-                <p className="text-[10px] font-body mt-0.5 flex items-center gap-1.5" style={{ color: 'var(--muted)' }}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-green-400' : 'bg-amber-400'}`} />
-                  <span className={isOnline ? 'text-green-400' : 'text-amber-400'}>
-                    {isOnline ? 'Online' : 'Offline'}
-                  </span>
-                  {pendingCount > 0 && <span className="text-blue-400">· {pendingCount} pending</span>}
-                </p>
-              </div>
-            </div>
+    {/* 🔹 RIGHT */}
+    <div className="flex items-center gap-2">
 
-            {/* Right — domain toggle + sync + add */}
-            <div className="flex items-center gap-2">
+      {/* Domain Toggle */}
+      <div className="scale-90 sm:scale-100">
+        <DomainToggle />
+      </div>
 
-              {/* Domain Toggle Pill */}
-              <DomainToggle />
+      {/* Sync */}
+      {isOnline && pendingCount > 0 && (
+        <button
+          onClick={() => handleSync(false)}
+          disabled={syncing}
+          className="w-9 h-9 flex items-center justify-center rounded-xl border relative"
+          style={{
+            borderColor: "rgba(2,125,253,0.4)",
+            color: "#60a5fa",
+          }}
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            fill="none"
+            strokeWidth="2"
+            className={syncing ? "animate-spin" : ""}
+          >
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
 
-              {/* Sync button */}
-              {isOnline && pendingCount > 0 && (
-                <button
-                  onClick={() => handleSync(false)}
-                  disabled={syncing}
-                  title={`Sync ${pendingCount} pending`}
-                  className="w-9 h-9 flex items-center justify-center rounded-xl border transition-colors disabled:opacity-50 relative"
-                  style={{ borderColor: 'rgba(2,125,253,0.5)', color: '#60a5fa' }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className={syncing ? 'animate-spin' : ''}>
-                    <polyline points="23 4 23 10 17 10"/>
-                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-                  </svg>
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full text-[9px] text-white flex items-center justify-center font-display">
-                    {pendingCount}
-                  </span>
-                </button>
-              )}
+          <span className="absolute -top-1 -right-1 w-4 h-4 text-[9px] bg-blue-500 text-white rounded-full flex items-center justify-center">
+            {pendingCount}
+          </span>
+        </button>
+      )}
 
-              {/* Add Question button */}
-              <button
-                onClick={() => setShowForm(true)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl ${accentBtnCls}`}
-                style={accentBg}
-              >
-                <span className="text-base leading-none">+</span>
-                <span className="hidden sm:inline">{domain.addLabel}</span>
-              </button>
-            </div>
-          </div>
-        </nav>
+      {/* Add Button */}
+      <button
+        onClick={() => setShowForm(true)}
+        className={`flex items-center gap-1 sm:gap-2 px-3 py-2 rounded-xl ${accentBtnCls}`}
+        style={accentBg}
+      >
+        <span className="text-base leading-none">+</span>
+        <span className="hidden sm:inline text-sm">
+          {domain.addLabel}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  {/* 🔻 MOBILE STATUS BAR (THIS IS THE MAGIC FIX) */}
+  <div className="sm:hidden px-3 pb-2 flex items-center justify-between text-[11px]">
+
+    <div className="flex items-center gap-2">
+      <span
+        className={`w-2 h-2 rounded-full ${
+          isOnline ? "bg-green-400" : "bg-amber-400"
+        }`}
+      />
+      <span className={isOnline ? "text-green-400" : "text-amber-400"}>
+        {isOnline ? "Online" : "Offline"}
+      </span>
+    </div>
+
+    {pendingCount > 0 && (
+      <span className="text-blue-400">
+        {pendingCount} pending
+      </span>
+    )}
+  </div>
+</nav>
 
         {/* ── Main content ──────────────────────────────────── */}
         <main className="max-w-5xl mx-auto px-4 py-8">
